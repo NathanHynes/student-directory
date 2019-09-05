@@ -17,14 +17,25 @@ def input_students
   students
 end
 
+def input_initial
+  puts "Would you like to see students with a particular initial?"
+  puts "If so enter initial below, if not enter ALL"
+  initial = gets.chomp
+  initial
+end
+
 def print_header
   puts "The Students of Villains Academy"
   puts "-------------"
 end
 
-def print(students)
+def print(students, initial)
   students.each_with_index do |student,index|
-    puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)" 
+    if student[:name][0] == initial
+      puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+    elsif initial == "ALL"
+      puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+    end
   end
 end
 
@@ -33,7 +44,8 @@ def print_footer(students)
 end
 
 students = input_students
+initial = input_initial
 #nothing happens until we call the methods
 print_header
-print(students)
+print(students, initial)
 print_footer(students)
