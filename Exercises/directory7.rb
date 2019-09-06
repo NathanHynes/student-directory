@@ -45,8 +45,12 @@ def print_header
 end
 
 def print(students)
-  students.each_with_index do |student,index|
-    puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+  cohorts = students.map { |student| student[:cohort] }.uniq
+  cohorts.each do |cohort|
+    puts "#{cohort.capitalize} cohort students:"
+    students.each do |student|
+      puts student[:name] if student[:cohort] == cohort
+    end
   end
 end
 
