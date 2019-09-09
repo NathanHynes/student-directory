@@ -1,11 +1,20 @@
 @students = [] # An empty array accessible to all methods
 
+# Method to append to @students array
+
+def push_students(name, cohort = :september)
+  @students << {name: name, cohort: cohort}
+end
+
+
+# Interactive Menu
+
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
   puts "4. Load the list from students.csv"
-  puts "9. Exit" # 9 because we'll be adding more items
+  puts "5. Exit" # 9 because we'll be adding more items
 end
 
 def interactive_menu
@@ -14,6 +23,8 @@ def interactive_menu
     process(STDIN.gets.chomp)
   end
 end
+
+# User input
 
 def process(selection)
   case selection
@@ -25,7 +36,7 @@ def process(selection)
     save_students
   when "4"
     load_students
-  when "9"
+  when "5"
     exit # this will cause the program to terminate
   else
     puts "I don't know what you mean, try again"
@@ -40,12 +51,14 @@ def input_students
   # While the name is not empty, repeat this code
   while !name.empty? do
     # Add the student hash to the array
-    @students << {name: name, cohort: :september}
+    push_students(name)
     puts "Now we have #{@students.count} students"
     # Get another name from the user
     name = STDIN.gets.chomp
   end
 end
+
+# Show students
 
 def show_students
   print_header
@@ -66,6 +79,8 @@ def print_footer
   puts "Overall, we have #{@students.count} great students"
 end
 
+# Save student list
+
 def save_students
   # open the file for writing
   file = File.open("students.csv", "w")
@@ -78,18 +93,20 @@ def save_students
   file.close
 end
 
-def load_students(filename = "students.csv")
+# Load previous student list
+
+def load_students(filename)
   file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
+    push_students(name, cohort.to_sym)
   end
   file.close
 end
 
-def try_load_students
+def load_students_on_startup
   filename = ARGV.first # first argument from the command csv_line
-  return if filename.nil? # get out of the method if it isn't given
+  filename = "students.csv" if filename.nil?
   if File.exists?(filename) # if it exists
     load_students(filename)
     puts "Loaded #{@students.count} from #{filename}"
@@ -99,5 +116,7 @@ def try_load_students
   end
 end
 
-try_load_students
+#run program
+
+load_students_on_startup
 interactive_menu
