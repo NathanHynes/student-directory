@@ -1,3 +1,5 @@
+require "csv"
+
 @students = [] # An empty array accessible to all methods
 
 # Method to append to @students array
@@ -12,8 +14,8 @@ end
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Save the list to file"
+  puts "4. Load the list from another file"
   puts "5. Exit" # 9 because we'll be adding more items
 end
 
@@ -33,9 +35,13 @@ def process(selection)
   when "2"
     show_students
   when "3"
-    save_students
+    puts "What file would you like to save to ..."
+    filename = STDIN.gets.chomp
+    save_students(filename)
   when "4"
-    load_students
+    puts "what file would you like to load from ..."
+    filename = STDIN.gets.chomp
+    load_students(filename)
   when "5"
     puts "\nProgram will now close"
     exit # this will cause the program to terminate
@@ -83,29 +89,26 @@ end
 
 # Save student list
 
-def save_students
+def save_students(filename)
   # open the file for writing
-  file = File.open("students.csv", "w")
-  # iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  CSV.open(filename, "w") do |csv|
+    # iterate over the array of students
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort]]
+      csv << student_data
+    end
   end
-  file.close
-  puts "\nfile saved successfully\n\n"
+  puts "\nfile saved successfully to #{filename}\n\n"
 end
 
 # Load previous student list
 
 def load_students(filename)
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
+  CSV.foreach(filename) do |line|
+    name, cohort = line
     push_students(name, cohort.to_sym)
   end
-  file.close
-  puts "\nfile loaded successfully\n\n"
+  puts "\nfile loaded successfully from #{filename}\n\n"
 end
 
 def load_students_on_startup
