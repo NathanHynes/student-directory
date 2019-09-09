@@ -37,6 +37,7 @@ def process(selection)
   when "4"
     load_students
   when "5"
+    puts "\nProgram will now close"
     exit # this will cause the program to terminate
   else
     puts "I don't know what you mean, try again"
@@ -56,6 +57,7 @@ def input_students
     # Get another name from the user
     name = STDIN.gets.chomp
   end
+  puts "\nStudents entered successfully\n\n"
 end
 
 # Show students
@@ -91,6 +93,7 @@ def save_students
     file.puts csv_line
   end
   file.close
+  puts "\nfile saved successfully\n\n"
 end
 
 # Load previous student list
@@ -102,6 +105,7 @@ def load_students(filename)
     push_students(name, cohort.to_sym)
   end
   file.close
+  puts "\nfile loaded successfully\n\n"
 end
 
 def load_students_on_startup
